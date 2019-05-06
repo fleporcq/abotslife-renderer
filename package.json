@@ -1,0 +1,27 @@
+{
+  "name": "@fleporcq/abotslife-renderer",
+  "version": "0.0.1",
+  "description": "The renderer for the \"A bot's life\" project",
+  "main": "",
+  "repository": "github:fleporcq/abotslife-renderer",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack --watch & live-server --port=8085",
+    "lint": "tslint --project tsconfig.json"
+  },
+  "author": "fleporcq",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@fleporcq/abotslife-core": "github:fleporcq/abotslife-core"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1",
+    "phaser": "^3.16.2",
+    "phaser3-docs": "github:photonstorm/phaser3-docs",
+    "ts-loader": "^5.4.6",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.2"
+  }
+}
