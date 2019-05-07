@@ -1,13 +1,32 @@
 import { Renderer } from './renderer';
+import { Orientation, Pose, ScriptedBot, SensorType, Wall, World } from '@fleporcq/abotslife-core';
 
 const config: GameConfig = {
   title: 'A bot\'s life',
   width: 1204,
   height: 768,
   parent: 'game',
-  backgroundColor: '#18216D'
+  backgroundColor: 'black'
 };
 
 window.onload = () => {
-  const game = new Renderer(config);
+  const world = new World(100, 100);
+  const bot = new ScriptedBot();
+  bot.addSensor(SensorType.DISTANCE);
+  bot.flash(`
+      if(sensor('distance').measure() < 1){
+        turnRight();
+      } else {
+        forward();
+      }
+    `);
+  world.add(bot, new Pose(1, 2, Orientation.EAST));
+  world.add(new Wall(), new Pose(2, 3, Orientation.EAST));
+  world.add(new Wall(), new Pose(3, 3, Orientation.EAST));
+  world.add(new Wall(), new Pose(4, 2, Orientation.EAST));
+  setInterval(() => {
+    world.next();
+  }, 1000);
+  const renderer = new Renderer(config, world);
+
 };
