@@ -10,7 +10,7 @@ const config: GameConfig = {
 };
 
 window.onload = () => {
-  const world = new World(100, 100);
+  const world = new World(22, 22);
   const bot = new ScriptedBot();
   bot.addSensor(SensorType.DISTANCE);
   bot.flash(`
@@ -26,7 +26,7 @@ window.onload = () => {
   world.add(new Wall(), new Pose(4, 2, Orientation.EAST));
   setInterval(() => {
     world.next();
-  }, 1000);
+  }, 300);
   const renderer = new Renderer(config, world);
 
 };

@@ -10,6 +10,9 @@ export class SceneMain extends Scene {
   private tileSize: number;
   private cameraSpeed: number;
   private followPoint: Vector2;
+  private worldBoundaries: Vector2;
+  private viewMin: Vector2;
+  private viewMax: Vector2;
   private chunks: Chunk[];
   private world: World;
 
@@ -46,10 +49,21 @@ export class SceneMain extends Scene {
 
   public create() {
 
-    this.followPoint = new Phaser.Math.Vector2(
+
+
+    this.worldBoundaries = new Phaser.Math.Vector2(
+      this.world.getWidth() * this.tileSize,
+      this.world.getWidth() * this.tileSize
+    );
+    this.viewMin = new Phaser.Math.Vector2(
       this.cameras.main.worldView.x + (this.cameras.main.worldView.width / 2),
       this.cameras.main.worldView.y + (this.cameras.main.worldView.height / 2)
     );
+    this.viewMax = new Phaser.Math.Vector2(
+      this.worldBoundaries.x - this.viewMin.x,
+      this.worldBoundaries.y - this.viewMin.y
+    );
+    this.followPoint = this.viewMin.clone();
 
     this.chunks = [];
 
@@ -97,16 +111,33 @@ export class SceneMain extends Scene {
     }
 
     if (this.keyUp.isDown) {
-      this.followPoint.y -= this.cameraSpeed;
+      if (this.followPoint.y > this.viewMin.y + this.cameraSpeed) {
+        this.followPoint.y -= this.cameraSpeed;
+      } else {
+        this.followPoint.y = this.viewMin.y;
+      }
     }
     if (this.keyDown.isDown) {
-      this.followPoint.y += this.cameraSpeed;
+      if (this.followPoint.y < this.viewMax.y - this.cameraSpeed) {
+        this.followPoint.y += this.cameraSpeed;
+      } else {
+        this.followPoint.y = this.viewMax.y;
+      }
     }
     if (this.keyLeft.isDown) {
-      this.followPoint.x -= this.cameraSpeed;
+      if (this.followPoint.x > this.viewMin.x + this.cameraSpeed) {
+        this.followPoint.x -= this.cameraSpeed;
+      } else {
+        this.followPoint.x = this.viewMin.x;
+      }
     }
     if (this.keyRight.isDown) {
-      this.followPoint.x += this.cameraSpeed;
+      if (this.followPoint.x < this.viewMax.x - this.cameraSpeed) {
+        this.followPoint.x += this.cameraSpeed;
+      } else {
+        this.followPoint.x = this.viewMax.x;
+      }
+
     }
 
     this.cameras.main.centerOn(this.followPoint.x, this.followPoint.y);
