@@ -15,6 +15,7 @@ export class SceneMain extends Scene {
   private viewMax: Vector2;
   private chunks: Chunk[];
   private world: World;
+  private nextWorld: World;
 
   private keyUp: Key;
   private keyDown: Key;
@@ -23,33 +24,43 @@ export class SceneMain extends Scene {
 
   constructor(world: World, tileSize: number = 64, chunkSize: number = 7, cameraSpeed: number = 64) {
     super({ key: 'SceneMain' });
+    this.world = world;
     this.tileSize = tileSize;
     this.chunkSize = chunkSize;
     this.cameraSpeed = cameraSpeed;
-    this.world = world;
-  }
-
-  public getChunkSize(): number {
-    return this.chunkSize;
-  }
-
-  public getTileSize(): number {
-    return this.tileSize;
   }
 
   public getWorld(): World {
     return this.world;
   }
 
+  public getNextWorld(): World {
+    return this.nextWorld;
+  }
+
+  public getTileSize(): number {
+    return this.tileSize;
+  }
+
+  public getChunkSize(): number {
+    return this.chunkSize;
+  }
+
   public preload() {
-    this.load.image('tile', 'assets/tile.png');
+    this.load.image('ground', 'assets/ground.png');
     this.load.image('bot', 'assets/bot.png');
     this.load.image('wall', 'assets/wall.png');
   }
 
   public create() {
+    const tickInterval = 300;
+    this.nextWorld = this.world.clone();
+    setInterval(() => {
+      this.world = this.nextWorld;
+      this.nextWorld = this.world.clone();
+      this.nextWorld.next();
 
-
+    }, tickInterval);
 
     this.worldBoundaries = new Phaser.Math.Vector2(
       this.world.getWidth() * this.tileSize,
